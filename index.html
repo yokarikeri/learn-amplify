@@ -4,8 +4,68 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width" />
         <title>Hello World</title>
+        <!-- CSS を追加してクライアント UI を変更する -->
+        <style>
+            body {
+                background-color: #232f3e;
+            }
+            label,
+            button {
+                color: #ff9900;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 20px;
+                margin-left: 40px;
+            }
+            input {
+                color: #232f3e;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 20px;
+                margin-left: 20px;
+            }
+        </style>
+        <script>
+            // 名と姓をパラメーターとして受け取る callAPI 関数を定義する
+            var callAPI = (firstName, lastName) => {
+                var myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
+
+                var raw = JSON.stringify({
+                    firstName: firstName,
+                    lastName: lastName,
+                });
+
+                // API 呼び出し用のパラメーターを使用して JSON オブジェクトを作成し、変数に格納
+                var requestOptions = {
+                    method: "POST",
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: "follow",
+                };
+
+                // パラメーターを使用して API 呼び出しを行い、promise を使用して応答を取得
+                fetch(
+                    "https://kddd68srqa.execute-api.ap-northeast-1.amazonaws.com/dev",
+                    requestOptions
+                )
+                    .then((response) => response.text())
+                    .then((result) => alert(JSON.parse(result).body))
+                    .catch((error) => console.log("error", error));
+            };
+        </script>
     </head>
     <body>
-        <p>Hello World</p>
+        <form>
+            <label>First Name :</label>
+            <input type="text" id="fName" />
+            <label>Last Name :</label>
+            <input type="text" id="lName" />
+            <!-- ボタンの onClick メソッドを設定して、入力値をパラメーターとして渡すように定義した関数を呼び出し -->
+            <button
+                type="button"
+                onclick="callAPI(document.getElementById('fName').value, document.getElementById('lName').value)"
+            >
+                Call API
+            </button>
+        </form>
     </body>
 </html>
